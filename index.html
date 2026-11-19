@@ -1,0 +1,1253 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Dashboard Ejecutivo y Portal de Análisis de Vulnerabilidad Web y Autenticidad (ICVA) en Hoteles de Antigua Guatemala registrados ante INGUAT." />
+    <title>
+      ICVA Dashboard | Auditoría de Ciberseguridad Web - Hoteles Antigua
+      Guatemala
+    </title>
+
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Chart.js (Local bundle with CDN fallback) -->
+    <script src="chart.umd.min.js"></script>
+    <script>
+      if (typeof Chart === "undefined") {
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"><\/script>',
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <!-- ========================================================================
+       APPLICATION HEADER / NAVBAR
+       ======================================================================== -->
+    <header class="app-header">
+      <div class="container nav-inner">
+        <div class="brand-wrapper">
+          <div class="brand-icon" aria-hidden="true">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>
+              ICVA Analytics
+              <span class="badge-version">v1.0 Oficial</span>
+            </h1>
+            <!-- <p>Auditoría de Ciberseguridad Web • INGUAT Antigua Guatemala</p> -->
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button
+            type="button"
+            class="nav-btn"
+            id="export-csv-btn"
+            title="Descargar datos en CSV">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Exportar CSV
+          </button>
+
+          <button
+            type="button"
+            class="nav-btn primary"
+            id="export-json-btn"
+            title="Descargar datos en JSON">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            JSON
+          </button>
+
+          <!-- <button
+            type="button"
+            class="nav-btn primary"
+            id="print-report-btn"
+            title="Imprimir informe ejecutivo o guardar en PDF">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path
+                d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Imprimir Reporte
+          </button> -->
+
+          <button
+            type="button"
+            class="nav-btn theme-toggle-btn"
+            id="theme-toggle"
+            aria-label="Cambiar entre tema oscuro y claro"
+            title="Cambiar tema">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================================================================
+       HERO BANNER & CONTEXT
+       ======================================================================== -->
+    <main>
+      <section class="hero-section">
+        <div class="container">
+          <div class="hero-pill">
+            <span class="hero-pill-dot"></span>
+            Investigación Científica • Ciberseguridad en el Sector Turístico
+          </div>
+          <h2 class="hero-title">
+            Vulnerabilidad Técnica y Verificación de Autenticidad en
+            <span class="gradient-text">Sitios Web de Hospedaje</span>
+          </h2>
+          <p class="hero-desc">
+            Evaluación empírica y reproducible sobre 13 establecimientos de
+            hospedaje en Antigua Guatemala registrados ante el
+            <strong>Instituto Guatemalteco de Turismo (INGUAT)</strong>,
+            estructurada mediante el
+            <strong
+              >Índice Compuesto de Vulnerabilidad y Autenticidad (ICVA)</strong
+            >.
+          </p>
+
+          <div class="hero-meta-strip">
+            <div class="hero-meta-item">
+              <span>Marco Metodológico:</span>
+              <strong>ICVA (Escala 0 a 100 pts)</strong>
+            </div>
+            <div class="hero-meta-item">
+              <span>Ubicación:</span>
+              <strong>Antigua Guatemala, Sacatepéquez</strong>
+            </div>
+            <div class="hero-meta-item">
+              <span>Herramientas de Auditoría:</span>
+              <strong
+                >dnstwist, crt.sh, Shodan, Qualys SSL Labs, DNSSEC, curl,
+                checkdmarc</strong
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================
+         EXECUTIVE KPI STATS CARDS
+         ======================================================================== -->
+      <section
+        class="kpi-section"
+        aria-label="Indicadores Clave de Rendimiento">
+        <div class="container">
+          <div class="kpi-grid">
+            <!-- KPI 1: Promedio ICVA -->
+            <article class="kpi-card risk-mid">
+              <div class="kpi-header">
+                <span class="kpi-label">Promedio ICVA Global</span>
+                <div class="kpi-icon-badge" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="kpi-avg-icva">46.4</span>
+                <span class="kpi-unit">/ 100</span>
+              </div>
+              <p class="kpi-subtext">
+                Nivel global medio-bajo impulsado por la presencia de activos
+                caídos. (Promedio de activos: 66.9 pts).
+              </p>
+            </article>
+
+            <!-- KPI 2: Sitios Caídos -->
+            <article class="kpi-card risk-high">
+              <div class="kpi-header">
+                <span class="kpi-label">Sitios Inoperativos (Caídos)</span>
+                <div class="kpi-icon-badge" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="kpi-down-rate">30.8%</span>
+                <span class="kpi-unit">(4 de 13)</span>
+              </div>
+              <p class="kpi-subtext">
+                4 sitios oficiales registrados en INGUAT no responden peticiones
+                HTTP/HTTPS (0 pts de frontera técnica).
+              </p>
+            </article>
+
+            <!-- KPI 3: Desempeño Máximo -->
+            <article class="kpi-card risk-low">
+              <div class="kpi-header">
+                <span class="kpi-label">Puntaje Máximo (Líder)</span>
+                <div class="kpi-icon-badge" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2">
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="kpi-top-hotel">87.5 pts</span>
+                <span class="kpi-unit">Casa Antigua</span>
+              </div>
+              <p class="kpi-subtext">
+                Líder en defensas perimetrales y cifrado. Seguido por Mesón del
+                Valle con 85.0 pts.
+              </p>
+            </article>
+
+            <!-- KPI 4: Brecha Crítica HSTS -->
+            <article class="kpi-card cyan">
+              <div class="kpi-header">
+                <span class="kpi-label">Carencia de HSTS Estricto</span>
+                <div class="kpi-icon-badge" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2">
+                    <rect
+                      x="3"
+                      y="11"
+                      width="18"
+                      height="11"
+                      rx="2"
+                      ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value" id="kpi-hsts-gap">92.3%</span>
+                <span class="kpi-unit">(12 de 13)</span>
+              </div>
+              <p class="kpi-subtext">
+                Solo 1 hotel (El Marquez de Antigua) implementa HSTS completo.
+                Riesgo de SSL Stripping y MITM.
+              </p>
+            </article>
+
+            <!-- KPI 5: Exposición de Correo / DMARC -->
+            <article class="kpi-card indigo">
+              <div class="kpi-header">
+                <span class="kpi-label">DMARC Reject Inexistente</span>
+                <div class="kpi-icon-badge" aria-hidden="true">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2">
+                    <path
+                      d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-value">0%</span>
+                <span class="kpi-unit">Adopción</span>
+              </div>
+              <p class="kpi-subtext">
+                Ningún hotel posee directiva de rechazo (p=reject). Alta
+                exposición a suplantación de reservas por email.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================
+         INTERACTIVE CHARTS SECTION (2x2 GRID)
+         ======================================================================== -->
+      <section
+        class="charts-section"
+        aria-label="Visualizaciones y Gráficas Interactivas">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <h2>Visualización Gráfica y Diagnóstico Comparativo</h2>
+              <p>
+                Análisis interactivo de variables cuantitativas, distribución
+                del riesgo y cobertura defensiva.
+              </p>
+            </div>
+            <div class="chart-legend-badge">
+              13 Sitios Auditados • Escala 0 a 100 pts
+            </div>
+          </div>
+
+          <div class="charts-grid-2x2">
+            <!-- Chart 1: Ranking General -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div class="chart-card-title">
+                  <h3>Ranking General de Hoteles (ICVA)</h3>
+                  <p>
+                    Puntuación global por establecimiento y código de color
+                    según nivel de vulnerabilidad
+                  </p>
+                </div>
+              </div>
+              <div class="chart-canvas-wrapper">
+                <canvas
+                  id="chart-ranking"
+                  aria-label="Gráfica de barras horizontales mostrando el puntaje ICVA de cada hotel"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 2: Distribución por Nivel de Riesgo -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div class="chart-card-title">
+                  <h3>Estratificación por Nivel de Vulnerabilidad</h3>
+                  <p>
+                    Distribución porcentual de los establecimientos según los
+                    umbrales metodológicos
+                  </p>
+                </div>
+              </div>
+              <div class="chart-canvas-wrapper">
+                <canvas
+                  id="chart-distribution"
+                  aria-label="Gráfica circular de tipo dona con la distribución de hoteles en vulnerabilidad alta, media y baja"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 3: Cobertura de Indicadores Técnicos -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div class="chart-card-title">
+                  <h3>Grado de Cumplimiento Técnico por Indicador</h3>
+                  <p>
+                    Porcentaje de cumplimiento promedio (% de puntos posibles
+                    alcanzados)
+                  </p>
+                </div>
+              </div>
+              <div class="chart-canvas-wrapper">
+                <canvas
+                  id="chart-indicators"
+                  aria-label="Gráfica radial tipo radar con los 9 indicadores técnicos evaluados"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 4: Dimensiones D1 vs D2 -->
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <div class="chart-card-title">
+                  <h3>Matriz Bidimensional de Ciberseguridad</h3>
+                  <p>
+                    Desglose comparativo: Dimensión 1 (Amenazas Externas - 40
+                    pts) vs Dimensión 2 (Controles Defensivos - 60 pts)
+                  </p>
+                </div>
+              </div>
+              <div class="chart-canvas-wrapper">
+                <canvas
+                  id="chart-dimensions"
+                  aria-label="Gráfica de barras apiladas comparando Dimensión 1 y Dimensión 2 para cada hotel"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================
+         DATA TABLE (MODERN WEB GUIDANCE COMPLIANT)
+         ======================================================================== -->
+      <section
+        class="table-section"
+        aria-label="Tabla de Datos de la Auditoría">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <h2>Matriz de Resultados Detallada</h2>
+              <p>
+                Datos pormenorizados de cada establecimiento. Haga clic en los
+                encabezados para ordenar o en "Ver Ficha" para examinar el
+                diagnóstico completo.
+              </p>
+            </div>
+          </div>
+
+          <!-- Controls: Search & Filter Pills -->
+          <div class="table-controls-bar">
+            <div class="search-box-wrap">
+              <svg
+                class="search-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="search"
+                id="table-search"
+                class="search-input"
+                placeholder="Buscar por hotel o dominio..."
+                aria-label="Buscar en la tabla de hoteles" />
+            </div>
+
+            <div
+              class="filter-pills"
+              role="group"
+              aria-label="Filtrar por nivel de vulnerabilidad">
+              <button type="button" class="filter-btn active" data-filter="all">
+                Todos (13)
+              </button>
+              <button type="button" class="filter-btn" data-filter="baja">
+                Vulnerabilidad Baja (5)
+              </button>
+              <button type="button" class="filter-btn" data-filter="media">
+                Vulnerabilidad Media (3)
+              </button>
+              <button type="button" class="filter-btn" data-filter="alta">
+                Vulnerabilidad Alta (5)
+              </button>
+              <button type="button" class="filter-btn" data-filter="down">
+                Sitios Caídos (4)
+              </button>
+            </div>
+          </div>
+
+          <!-- Screen reader live region for sort announcements (per sortable-table guide) -->
+          <div
+            id="sort-status"
+            role="status"
+            class="sr-only"
+            aria-live="polite"></div>
+
+          <!-- Scrollable Table Wrapper (per responsive-table guide) -->
+          <div
+            tabindex="0"
+            role="region"
+            aria-labelledby="hotels-table-caption"
+            class="table-wrapper">
+            <table id="hotels-table">
+              <caption id="hotels-table-caption">
+                Auditoría Técnica de Sitios Web de Hospedaje en Antigua
+                Guatemala (Censo Oficial INGUAT)
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col" data-type="number">
+                    <button type="button" class="sort-btn">
+                      <span>#</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" class="hotel-header-col" data-type="string">
+                    <button type="button" class="sort-btn">
+                      <span>Establecimiento</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" data-type="number" aria-sort="descending">
+                    <button type="button" class="sort-btn">
+                      <span>ICVA Total</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" data-type="number">
+                    <button type="button" class="sort-btn">
+                      <span>D1 Suplantación (40)</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" data-type="number">
+                    <button type="button" class="sort-btn">
+                      <span>D2 Controles (60)</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" data-type="number">
+                    <button type="button" class="sort-btn">
+                      <span>TLS/SSL (15)</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" data-type="number">
+                    <button type="button" class="sort-btn">
+                      <span>DNSSEC (10)</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" data-type="number">
+                    <button type="button" class="sort-btn">
+                      <span>HSTS (15)</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" data-type="number">
+                    <button type="button" class="sort-btn">
+                      <span>SPF/DMARC (5)</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col" data-type="string">
+                    <button type="button" class="sort-btn">
+                      <span>Estado Web</span>
+                      <svg
+                        class="sort-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </th>
+                  <th scope="col">
+                    <span>Acción</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="hotels-tbody">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================
+         DEEP DIVE QUALITATIVE & QUANTITATIVE ANALYSIS SECTION
+         ======================================================================== -->
+      <section
+        class="analysis-section"
+        aria-label="Análisis Crítico y Hallazgos de Investigación">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <h2>Análisis de Hallazgos y Discusión de Resultados</h2>
+              <p>
+                Interpretación técnica de los datos del Excel, implicaciones de
+                seguridad y notas del censo.
+              </p>
+            </div>
+          </div>
+
+          <div class="analysis-grid">
+            <!-- Card 1: Sitios caídos -->
+            <article class="analysis-card">
+              <span class="analysis-card-tag tag-critical">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                Hallazgo Crítico #1
+              </span>
+              <h3>Falla Sistémica de Enlaces en INGUAT: 30.8% Inoperativos</h3>
+              <p>
+                Cuatro de los 13 sitios registrados formalmente en el censo
+                oficial de INGUAT se encuentran
+                <strong>completamente fuera de línea</strong> (Hotel Palacio
+                Chico, Hotel La Galera, Hotel Posada Plácida y la sede de Hotel
+                Solei). Conforme a la regla de frontera técnica del modelo
+                científico, estos activos reciben <strong>0 puntos</strong>.
+              </p>
+              <p>
+                Esta inoperatividad no solo degrada la experiencia del turista
+                nacional e internacional que confía en el directorio de la
+                máxima autoridad turística, sino que abre la puerta a ataques de
+                <em>Drop Catching</em> (compra de dominios abandonados por
+                ciberatacantes para montar pasarelas falsas de pago).
+              </p>
+              <div class="quote-box">
+                "NOTA. Se contabilizaron hasta el momento 4 sitios web que están
+                caídos, no funcionan; estos links están registrados en INGUAT."
+              </div>
+            </article>
+
+            <!-- Card 2: Hotel Solei -->
+            <article class="analysis-card">
+              <span class="analysis-card-tag tag-critical">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                Hallazgo Específico #2
+              </span>
+              <h3>El Paradigma de las Estrellas: Hotel Solei (5 Estrellas)</h3>
+              <p>
+                Se identificó una disonancia marcada entre la categorización
+                formal de hospitalidad y la gobernanza tecnológica. Mientras que
+                el portal corporativo global del Grupo Soleil permanece activo,
+                el enlace específico para la sede de
+                <strong>Antigua Guatemala</strong> reportado ante el INGUAT no
+                funciona.
+              </p>
+              <p>
+                Tener una clasificación de <strong>5 estrellas</strong> genera
+                en el viajero una expectativa implícita de máxima solidez y
+                confiabilidad. Que el canal oficial esté inoperativo forza a los
+                usuarios a recurrir a intermediarios (OTAs) o canales no
+                verificados de mensajería instantánea donde prolifera el fraude.
+              </p>
+              <div class="quote-box">
+                "Hotel Solei: Su página global funciona, pero la página para la
+                Antigua Guatemala no está funcionando, a pesar de tener 5
+                estrellas según INGUAT."
+              </div>
+            </article>
+
+            <!-- Card 3: Hotel Posada de Don Rodrigo -->
+            <article class="analysis-card">
+              <span class="analysis-card-tag tag-critical">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Hallazgo Crítico #3
+              </span>
+              <h3>Posada de Don Rodrigo: 12.5 pts y Carencia de Cifrado</h3>
+              <p>
+                A pesar de ostentar una categoría de
+                <strong>4 estrellas</strong>, el Hotel Posada de Don Rodrigo
+                obtuvo el puntaje más bajo de todos los sitios que responden
+                (12.5 / 100). Su infraestructura web se reduce a un formato tipo
+                blog de una sola vista, desprovisto de certificado TLS/SSL
+                activo (0/15), sin DNSSEC (0/10), sin HSTS (0/15) y expuesto a
+                suplantación externa (0/40 en Dimensión 1).
+              </p>
+              <p>
+                Cualquier dato o solicitud de reserva transmitida a través de
+                este portal viaja en texto claro, susceptible de interceptación
+                directa en redes públicas y hoteles patrimoniales.
+              </p>
+              <div class="quote-box">
+                "Hotel Posada De Don Rodrigo: La página web es un tipo blog,
+                solo cuenta con una vista a pesar de tener 4 estrellas el hotel,
+                según INGUAT."
+              </div>
+            </article>
+
+            <!-- Card 4: Casa Miravalle -->
+            <article class="analysis-card">
+              <span class="analysis-card-tag tag-warning">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 14 14"></polyline>
+                </svg>
+                Hallazgo Específico #4
+              </span>
+              <h3>Casa Miravalle: Obsolescencia Tecnológica y Brecha UX</h3>
+              <p>
+                Casa Miravalle alcanza 70.0 puntos por mantener un certificado
+                TLS válido y DNSSEC, pero su sitio refleja un estado severo de
+                obsolescencia digital. Su código fuente y maquetación
+                corresponden a tecnologías legadas no adaptativas.
+              </p>
+              <p>
+                La baja calidad percibida genera desconfianza en el usuario,
+                erosionando las conversiones directas e incrementando la
+                probabilidad de que los clientes no identifiquen si están en el
+                portal legítimo o en una copia fraudulenta creada mediante
+                herramientas automatizadas.
+              </p>
+              <div class="quote-box">
+                "Casa Miravalle: Su página web es muy Antigua, la calidad es muy
+                baja, no se contempla una vista agradable al usuario."
+              </div>
+            </article>
+
+            <!-- Card 5: Brecha HSTS -->
+            <article class="analysis-card">
+              <span class="analysis-card-tag tag-insight">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <rect
+                    x="3"
+                    y="11"
+                    width="18"
+                    height="11"
+                    rx="2"
+                    ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                Vulnerabilidad de Protocolo
+              </span>
+              <h3>Carencia Crítica de HSTS: 84.6% Sin Blindaje Estricto</h3>
+              <p>
+                Un hallazgo transversal de enorme gravedad es que
+                <strong>solo 1 hotel de los 13 (El Marquez de Antigua)</strong>
+                tiene implementada la cabecera
+                <code>Strict-Transport-Security (HSTS)</code> en su valor máximo
+                (15 pts). Tres hoteles la tienen a medias (7.5 pts) y 9 hoteles
+                tienen 0 pts (promedio de cumplimiento: 19.2%).
+              </p>
+              <p>
+                En una ciudad turística como Antigua Guatemala, donde los
+                viajeros se conectan frecuentemente a redes Wi-Fi abiertas en
+                cafeterías y plazas, la ausencia de HSTS permite ataques de
+                <em>SSL Stripping</em> (degradación forzada a HTTP sin cifrar),
+                interceptando números de tarjeta de crédito e información de
+                huéspedes.
+              </p>
+            </article>
+
+            <!-- Card 6: DMARC & Email Spoofing -->
+            <article class="analysis-card">
+              <span class="analysis-card-tag tag-insight">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5">
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Riesgo de Phishing
+              </span>
+              <h3>Ausencia de Políticas DMARC Restrictivas (Email Spoofing)</h3>
+              <p>
+                El promedio en el indicador de SPF/DMARC (2.6) es de solo
+                <strong>1.35 sobre 5 puntos (26.9% de cumplimiento)</strong>.
+                Ninguno de los 13 establecimientos ha implementado una política
+                DMARC en modo <code>p=reject</code> o <code>p=quarantine</code>.
+              </p>
+              <p>
+                Cualquier ciberdelincuente puede enviar correos fraudulentos a
+                turistas simulando ser el departamento de reservas del hotel
+                (ej. <code>reservas@hotelauroraantigua.com</code>) solicitando
+                transferencias bancarias de anticipos o cancelaciones urgentes,
+                y los proveedores de correo receptores no descartarán el mensaje
+                por falta de una política DMARC obligatoria.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================================
+         STRATEGIC ROADMAP & RECOMMENDATIONS
+         ======================================================================== -->
+      <section
+        class="roadmap-section"
+        aria-label="Plan Estratégico de Remediación">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <h2>Plan Estratégico de Remediación y Recomendaciones</h2>
+              <p>
+                Acciones inmediatas y estructurales para elevar la postura de
+                ciberseguridad turística en Antigua Guatemala.
+              </p>
+            </div>
+          </div>
+
+          <div class="roadmap-grid">
+            <div class="roadmap-step">
+              <div class="step-number">1</div>
+              <h4>Fase Inmediata (0 - 30 Días): Higiene Básica</h4>
+              <p>
+                Acciones de bajo costo y alto impacto en configuración de
+                servidores:
+              </p>
+              <ul>
+                <li>
+                  Instalar y forzar certificados TLS 1.3 gratuitos (Let's
+                  Encrypt / Cloudflare).
+                </li>
+                <li>
+                  Habilitar la cabecera HSTS con
+                  <code>max-age=31536000; includeSubDomains</code>.
+                </li>
+                <li>
+                  Publicar registros TXT para SPF (<code>v=spf1 ... -all</code>)
+                  en los dominios institucionales.
+                </li>
+                <li>
+                  Corregir enlaces caídos y errores 404 en subdominios locales
+                  (Caso Solei).
+                </li>
+              </ul>
+            </div>
+
+            <div class="roadmap-step">
+              <div class="step-number">2</div>
+              <h4>Fase Táctica (30 - 90 Días): Blindaje de Marca</h4>
+              <p>
+                Mitigación de riesgos de suplantación y vectores avanzados de
+                ataque:
+              </p>
+              <ul>
+                <li>
+                  Evolucionar la política DMARC a
+                  <code>v=DMARC1; p=reject</code> con reportes RUA.
+                </li>
+                <li>
+                  Firmar criptográficamente las zonas DNS mediante
+                  <strong>DNSSEC</strong>.
+                </li>
+                <li>
+                  Implementar cabeceras Content-Security-Policy (CSP) para
+                  erradicar XSS y Magecart.
+                </li>
+                <li>
+                  Monitorear dominios homógrafos generados por dnstwist para
+                  alertar sobre typosquatting.
+                </li>
+              </ul>
+            </div>
+
+            <div class="roadmap-step">
+              <div class="step-number">3</div>
+              <h4>Fase Institucional: Gobernanza Digital INGUAT</h4>
+              <p>
+                Políticas públicas y rectoría del Instituto Guatemalteco de
+                Turismo:
+              </p>
+              <ul>
+                <li>
+                  Implementar un sistema automatizado de monitoreo continuo de
+                  enlaces para el directorio oficial.
+                </li>
+                <li>
+                  Crear el
+                  <strong
+                    >"Sello de Ciberseguridad Turística de Guatemala"</strong
+                  >
+                  como incentivo.
+                </li>
+                <li>
+                  Establecer la auditoría técnica periódica como requisito de
+                  refrendo de licencias hoteleras.
+                </li>
+                <li>
+                  Proveer guías técnicas de autodiagnóstico accesibles para la
+                  hotelería patrimonial e independiente.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ========================================================================
+       MODAL DIALOG: HOTEL DETAIL DOSSIER (MODERN WEB GUIDANCE COMPLIANT)
+       ======================================================================== -->
+    <dialog
+      id="hotel-detail-modal"
+      closedby="any"
+      aria-labelledby="modal-hotel-name">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 id="modal-hotel-name">Detalle de Establecimiento</h3>
+          <p>
+            <a
+              id="modal-hotel-url"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              >url.com ↗</a
+            >
+          </p>
+        </div>
+        <button type="button" class="modal-close-btn" aria-label="Cerrar modal">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Summary Score Badge -->
+        <div class="modal-icva-card">
+          <div>
+            <span
+              style="
+                font-size: 0.75rem;
+                color: var(--text-dim);
+                font-weight: 600;
+                text-transform: uppercase;
+              "
+              >Índice Compuesto ICVA</span
+            >
+            <div
+              style="
+                font-size: 0.875rem;
+                color: var(--text-muted);
+                margin-top: 2px;
+              ">
+              Desempeño general de seguridad
+            </div>
+          </div>
+          <span id="modal-hotel-icva" class="score-badge tier-low"
+            >0.0 / 100 pts</span
+          >
+        </div>
+
+        <!-- Dimensions Breakdown -->
+        <div
+          style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem">
+          <div
+            style="
+              background-color: var(--bg-surface);
+              padding: 0.875rem;
+              border-radius: var(--radius-sm);
+              border: 1px solid var(--border-card);
+            ">
+            <span
+              style="
+                font-size: 0.6875rem;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                font-weight: 700;
+              "
+              >Dimensión 1: Amenazas Externas</span
+            >
+            <div
+              id="modal-d1-score"
+              style="
+                font-size: 1.125rem;
+                font-weight: 800;
+                color: var(--accent-blue);
+                margin-top: 2px;
+              ">
+              -- / 40 pts
+            </div>
+          </div>
+          <div
+            style="
+              background-color: var(--bg-surface);
+              padding: 0.875rem;
+              border-radius: var(--radius-sm);
+              border: 1px solid var(--border-card);
+            ">
+            <span
+              style="
+                font-size: 0.6875rem;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                font-weight: 700;
+              "
+              >Dimensión 2: Controles Defensivos</span
+            >
+            <div
+              id="modal-d2-score"
+              style="
+                font-size: 1.125rem;
+                font-weight: 800;
+                color: var(--accent-indigo);
+                margin-top: 2px;
+              ">
+              -- / 60 pts
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicators List -->
+        <div>
+          <h4
+            style="
+              font-size: 0.9375rem;
+              font-weight: 700;
+              margin-bottom: 0.75rem;
+            ">
+            Desglose de los 9 Indicadores Técnicos
+          </h4>
+          <div id="modal-scores-list" class="modal-scores-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Qualitative Notes -->
+        <div>
+          <h4
+            style="
+              font-size: 0.9375rem;
+              font-weight: 700;
+              margin-bottom: 0.5rem;
+            ">
+            Observaciones y Diagnóstico Cualitativo
+          </h4>
+          <p
+            id="modal-hotel-notes"
+            style="
+              font-size: 0.84375rem;
+              color: var(--text-muted);
+              line-height: 1.6;
+              background-color: var(--bg-surface);
+              padding: 1rem;
+              border-radius: var(--radius-sm);
+              border: 1px solid var(--border-card);
+            "></p>
+        </div>
+
+        <!-- Specific Recommendations -->
+        <div>
+          <h4
+            style="
+              font-size: 0.9375rem;
+              font-weight: 700;
+              margin-bottom: 0.5rem;
+            ">
+            Medidas de Remediación Prioritarias
+          </h4>
+          <ul
+            id="modal-recommendations-list"
+            class="modal-recommendations-list">
+            <!-- Dynamically populated -->
+          </ul>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+    <footer class="app-footer">
+      <div class="container footer-inner">
+        <div>
+          <strong style="color: var(--text-main)">ICVA Analytics Portal</strong>
+          • Auditoría de Ciberseguridad Web
+          <p style="margin-top: 4px; color: var(--text-dim)">
+            Desarrollado bajo la metodología del Índice Compuesto de
+            Vulnerabilidad y Autenticidad en Sitios Web de Hospedaje en Antigua
+            Guatemala.
+          </p>
+          <p>
+            Paxel Cojolón Luis Fernando, Víctor Manuel Rompich, Paz Morán Josué
+            Ignacio, Coronado Rivera Libni Galilea
+          </p>
+        </div>
+        <div class="footer-links">
+          <a href="#hotels-table">Tabla de Datos</a>
+          <a
+            href="#"
+            onclick="
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return false;
+            "
+            >Volver arriba ↑</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <!-- Application Scripts -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
