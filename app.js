@@ -786,13 +786,7 @@ function initModal() {
    ========================================================================== */
 
 function initExports() {
-  const csvBtn = document.getElementById("export-csv-btn");
   const jsonBtn = document.getElementById("export-json-btn");
-
-  if (csvBtn) {
-    csvBtn.addEventListener("click", exportToCSV);
-  }
-
   if (jsonBtn) {
     jsonBtn.addEventListener("click", exportToJSON);
   }
